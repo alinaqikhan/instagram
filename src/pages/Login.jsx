@@ -14,11 +14,23 @@ const Login = () => {
   const [error, setError] = useState("");
   const isInvalid = password === "" || emailAddress === "";
 
-  const handleLogin = () => {
-    useEffect(() => {
-      document.title = "Login - Instagram";
-    }, []);
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
+    try {
+      await firebase.auth().signInWithEmailAndPassword(emailAddress, password);
+      history.push(ROUTES.DASHBOARD);
+    } catch (err) {
+      setEmailAddress("");
+      setPassword("");
+      setError(err.message);
+    }
+
   };
+
+  useEffect(() => {
+    document.title = "Login - Instagram";
+  }, []);
 
   return (
     <div className="container flex mx-auto max-w-screen-md items-center h-screen">
@@ -37,7 +49,7 @@ const Login = () => {
               className="mt-2 w-6/12 mb-4"
             />
           </h1>
-          {error && <p className="mb-4 text-xs text-red-primary"></p>}
+          {error && <p className="mb-4 text-xs text-red-primary">{error}</p>}
 
           <form method="POST" onSubmit={handleLogin}>
             <input
