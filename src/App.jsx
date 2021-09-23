@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import * as ROUTES from './constants/routes';
 import useAuthListener from "./hooks/useAuthListener";
 import { UserContext } from "./context/user";
+import ProtectedRoute from "./helpers/ProtectedRoute";
+import IsUserLoggedIn from "./helpers/IsUserLoggedIn";
 
 
 const Login = lazy(() => import('./pages/Login'));
@@ -20,9 +22,15 @@ export const App = () => {
     <Router>
       <Suspense fallback={<p>Loading...</p>}>
       <Switch>
-        <Route path={ROUTES.LOGIN} component={Login} exact />
-        <Route path={ROUTES.SIGN_UP} component={SignUp} exact />
-        <Route path={ROUTES.DASHBOARD} component={Dashboard} />
+        <IsUserLoggedIn user={user} loggedInPath={ROUTES.DASHBOARD} path={ROUTES.LOGIN}>
+          <Login />
+        </IsUserLoggedIn>
+        <IsUserLoggedIn user={user} loggedInPath={ROUTES.DASHBOARD} path={ROUTES.SIGN_UP}>
+          <SignUp />
+        </IsUserLoggedIn>
+        <ProtectedRoute user={user} path={ROUTES.DASHBOARD} exact>
+        <Dashboard />
+        </ProtectedRoute>
         <Route component={NotFound} />
       </Switch>
       </Suspense>
