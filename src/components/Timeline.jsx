@@ -1,9 +1,25 @@
-import React from 'react'
+import React from 'react';
+import Skeleton from 'react-loading-skeleton';
+import { usePhotos } from '../hooks/usePhotos';
 
 const Timeline = () => {
+
+    const { photos } = usePhotos();
+
     return (
         <div className="container col-span-2">
-            Instagram Feed
+            {
+                !photos? (
+                <Skeleton count={4} className="mb-5" width={640} height={500} />
+                )
+                : 
+                    photos?.length > 0? (
+                        photos.map((content) => <p key={content.docId}>{content.imageSrc}</p>)
+                    ):(
+                        <p className="text-center text-2xl">Follow people to see photos</p>
+                    )
+                
+            }
         </div>
     )
 }
