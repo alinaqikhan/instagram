@@ -9,3 +9,7 @@
 .text-red-primary {
     color: rgb(237, 73, 86);
 }
+
+.red-fill {
+    fill: #ed4956
+}
