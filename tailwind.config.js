@@ -4,7 +4,8 @@ module.exports = {
     removeDeprecatedGapUtilities: true
   },
   purge: {
-    content: ['./src/**/*.js', './src/**/**/*.js']
+    enabled: true,
+    content: ['./src/*.js' ,'./src/*.jsx' ,'./src/**/*.jsx', './src/**/**/*.jsx']
   },
   theme: {
     fill: (theme) => ({
