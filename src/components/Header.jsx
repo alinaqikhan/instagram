@@ -2,11 +2,12 @@ import React, { useContext } from "react";
 import { FirebaseContext } from "../context/firebase";
 import { UserContext } from "../context/user";
 import * as ROUTES from "../constants/routes";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const Header = () => {
   const { firebase } = useContext(FirebaseContext);
   const { user } = useContext(UserContext);
+  const history = useHistory();
 
   return (
     <div className="h-14 bg-white border-b border-gray-primary mb-8">
@@ -41,10 +42,12 @@ const Header = () => {
                   title="Sign Out"
                   onClick={() => {
                     firebase.auth().signOut();
+                    history.push(ROUTES.LOGIN);
                   }}
                   onKeyDown={(event) => {
                     if (event.key === "Enter") {
                       firebase.auth.signOut();
+                      history.push(ROUTES.LOGIN);
                     }
                   }}
                 >

@@ -7,7 +7,6 @@ import * as ROUTES from "../constants/routes";
 import { doesUsernameExist } from "../services/firebase";
 
 const Signup = () => {
-
   const history = useHistory();
   const { firebase } = useContext(FirebaseContext);
   const [username, setUsername] = useState("");
@@ -22,40 +21,41 @@ const Signup = () => {
     event.preventDefault();
 
     const usernameExists = await doesUsernameExist(username);
-    if(!usernameExists.length) {
-        try {
-            const createdUserResult = await firebase.auth().createUserWithEmailAndPassword(emailAddress, password);
-            
-            await createdUserResult.user.updateProfile({
-                displayName: username
-            })
+    if (!usernameExists.length) {
+      try {
+        const createdUserResult = await firebase
+          .auth()
+          .createUserWithEmailAndPassword(emailAddress, password);
 
-            await firebase.firestore().collection('users').add({
-                userId: createdUserResult.user.uid,
-                username: username.toLowerCase(),
-                fullName,
-                emailAddress: emailAddress.toLowerCase(),
-                following: [],
-                dateCreated: Date.now()
-            })
+        await createdUserResult.user.updateProfile({
+          displayName: username,
+        });
 
-            history.push(ROUTES.DASHBOARD);
+        await firebase.firestore().collection("users").add({
+          userId: createdUserResult.user.uid,
+          username: username.toLowerCase(),
+          fullName,
+          emailAddress: emailAddress.toLowerCase(),
+          followers: [],
+          following: [],
+          dateCreated: Date.now(),
+        });
 
-        } catch (err) {
-            setUsername("");
-            setEmailAddress("");
-            setPassword("");
-            setError(err.message);
-        }
+        history.push(ROUTES.DASHBOARD);
+      } catch (err) {
+        setUsername("");
+        setEmailAddress("");
+        setPassword("");
+        setError(err.message);
+      }
+    } else {
+      setUsername("");
+      setError("Username is already taken, try another one.");
     }
-    else {
-        setError("Username is already taken, try another one.")
-    }
-
   };
 
   useEffect(() => {
-    document.title = "Sign Up - Instagram";
+    document.title = "Sign Up • Instagram";
   }, []);
 
   return (
@@ -118,18 +118,23 @@ const Signup = () => {
               }}
               value={password}
             />
-           <button
+            <button
               disabled={isInvalid}
               type="submit"
               className={`bg-blue-medium text-white w-full rounded h-8 font-bold
-            ${isInvalid && 'opacity-50'}`}
+            ${isInvalid && "opacity-50"}`}
             >
               Sign up
             </button>
           </form>
         </div>
         <div className="flex justify-center items-center flex-col w-full bg-white p-4 border border-gray-primary rounded">
-          <p className="text-sm">{`Have an account?`} <Link to={ROUTES.LOGIN} className="font-bold text-blue-medium">Log in</Link></p>
+          <p className="text-sm">
+            {`Have an account?`}{" "}
+            <Link to={ROUTES.LOGIN} className="font-bold text-blue-medium">
+              Log in
+            </Link>
+          </p>
         </div>
       </div>
     </div>
