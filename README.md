@@ -1,2 +1,2 @@
-# instagram
+# Instagram
 Social networking service
